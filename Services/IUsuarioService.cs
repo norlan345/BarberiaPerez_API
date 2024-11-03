@@ -9,7 +9,7 @@ namespace BarberiaPerez_API.Services
     {
         //Task<UsuarioModel> CrearUsuario(UsuarioModel user);
         Task<UsuarioModel> CrearUsuario(UsuarioModel user);
-        Task<LoginModel> Login(LoginModel login);
+        Task<UsuarioModel> Login(UsuarioModel login);
 
         Task<UsuarioModel?> ObtenerUsuarioAsync(string Nombre);
 

@@ -1,57 +1,61 @@
-
 using BarberiaPerez_API.Services;
 using BarberiaPerez_API.Settings;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.Extensions.Options;
+using MongoDB.Driver;
 using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Cargar la clave JWT desde la configuración de MongoDbSettings
-var key = builder.Configuration.GetSection("MongoDbSettings").GetSection("Token").Value;
-
-// Configuración de autenticación JWT
+// Configuración de JWT
+var jwtSettings = builder.Configuration.GetSection("JwtSettings");
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(options =>
     {
-        options.TokenValidationParameters = new Microsoft.IdentityModel.Tokens.TokenValidationParameters
+        options.TokenValidationParameters = new TokenValidationParameters
         {
             ValidateIssuer = true,
             ValidateAudience = true,
             ValidateLifetime = true,
             ValidateIssuerSigningKey = true,
-            ValidIssuer = "https://localhost",
-            ValidAudience = "https://localhost",
-            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(key))
+            ValidIssuer = jwtSettings["Issuer"],
+            ValidAudience = jwtSettings["Audience"],
+            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtSettings["SecretKey"]))
         };
     });
 
-// Cargar la configuración desde el archivo appsettings.json para MongoDB
+// Configuración de MongoDB
 builder.Services.Configure<MongoDbSettings>(
     builder.Configuration.GetSection("MongoDbSettings")
 );
 
-// Añadir `MongoDbSettings` como un singleton para que esté disponible en los servicios
-builder.Services.AddSingleton(sp =>
-    sp.GetRequiredService<IOptions<MongoDbSettings>>().Value
-);
+// Registrar IMongoDatabase como un singleton
+builder.Services.AddSingleton<IMongoDatabase>(sp =>
+{
+    var settings = sp.GetRequiredService<IOptions<MongoDbSettings>>().Value;
+    var client = new MongoClient(settings.ConnectionString);
+    return client.GetDatabase(settings.DatabaseName);
+});
 
-// Registrar IUsuarioService e inyectar UsuarioService
+// Registrar los servicios de la aplicación
+builder.Services.AddScoped<ICitaService, CitaService>();
 builder.Services.AddScoped<IUsuarioService, UsuarioService>();
+builder.Services.AddSingleton<IServicioService, ServicioService>();
 
-// Añadir los controladores
+
+// Configuración de controladores y opciones JSON
 builder.Services.AddControllers()
     .AddJsonOptions(options =>
-        options.JsonSerializerOptions.PropertyNamingPolicy = null); // Para evitar cambiar el formato de nombres en JSON
+        options.JsonSerializerOptions.PropertyNamingPolicy = null);
 
-// Configurar Swagger para documentar la API
+// Configuración de Swagger para documentación de API
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 var app = builder.Build();
 
-// Configurar el pipeline HTTP
+// Configuración del pipeline HTTP
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
@@ -59,78 +63,11 @@ if (app.Environment.IsDevelopment())
 }
 
 // Habilitar autenticación y autorización
-app.UseAuthentication();
 app.UseHttpsRedirection();
+app.UseAuthentication();
 app.UseAuthorization();
 
 // Mapear los controladores
 app.MapControllers();
 
 app.Run();
-
-//using BarberiaPerez_API.Services;
-//using BarberiaPerez_API.Settings;
-//using Microsoft.AspNetCore.Authentication.JwtBearer;
-//using Microsoft.IdentityModel.Tokens;
-//using Microsoft.Extensions.Options;
-//using System.Text;
-
-//var builder = WebApplication.CreateBuilder(args);
-
-//// Configuración de JWT
-//var jwtSettings = builder.Configuration.GetSection("JwtSettings");
-//builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-//    .AddJwtBearer(options =>
-//    {
-//        options.TokenValidationParameters = new TokenValidationParameters
-//        {
-//            ValidateIssuer = true,
-//            ValidateAudience = true,
-//            ValidateLifetime = true,
-//            ValidateIssuerSigningKey = true,
-//            ValidIssuer = jwtSettings["Issuer"],
-//            ValidAudience = jwtSettings["Audience"],
-//            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtSettings["SecretKey"]))
-//        };
-//    });
-
-//// Configuración de la base de datos MongoDB
-//builder.Services.Configure<MongoDbSettings>(
-//    builder.Configuration.GetSection("MongoDbSettings"));
-
-//// Registrar `MongoDbSettings` como un singleton para inyección de dependencia
-//builder.Services.AddSingleton(sp =>
-//    sp.GetRequiredService<IOptions<MongoDbSettings>>().Value);
-
-//// Registrar servicios de la aplicación
-//builder.Services.AddSingleton<UsuarioService>();
-
-//// Configuración de controladores y opciones JSON
-//builder.Services.AddControllers()
-//    .AddJsonOptions(options =>
-//        options.JsonSerializerOptions.PropertyNamingPolicy = null); // Para evitar el cambio de formato en los nombres JSON
-
-//// Configuración de Swagger para documentación de API
-//builder.Services.AddEndpointsApiExplorer();
-//builder.Services.AddSwaggerGen();
-
-//var app = builder.Build();
-
-//// Configuración del pipeline HTTP
-//if (app.Environment.IsDevelopment())
-//{
-//    app.UseSwagger();
-//    app.UseSwaggerUI();
-//}
-
-//app.UseHttpsRedirection();
-
-//// Habilitar autenticación y autorización
-//app.UseAuthentication();
-//app.UseAuthorization();
-
-//// Mapear los controladores
-//app.MapControllers();
-
-//app.Run();
-

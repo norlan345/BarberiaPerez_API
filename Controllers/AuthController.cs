@@ -25,7 +25,7 @@ namespace BarberiaPerez_API.Controllers
         }
 
         [HttpPost("login")]
-        public async Task<IActionResult> Login([FromBody] LoginModel login)
+        public async Task<IActionResult> Login([FromBody] UsuarioModel login)
         {
             // Buscar usuario en la base de datos
             var existingUser = await _usuarioServicio.ObtenerUsuarioAsync(login.Nombre);

@@ -7,15 +7,15 @@ namespace BarberiaPerez_API.Models
     {
         [BsonId]
         [BsonRepresentation(BsonType.ObjectId)]
-        public string Id { get; set; }
+        public string? Id { get; set; }
 
-        [BsonElement("nombre_cliente")]
-        public string NombreCliente { get; set; }
+        [BsonElement("NombreCliente")]
+        public string? NombreCliente { get; set; }
 
-        [BsonElement("servicio")]
-        public string Servicio { get; set; }
+        [BsonElement("Servicio")]
+        public string? Servicio { get; set; }
 
-        [BsonElement("fecha_cita")]
+        [BsonElement("FechaCita")]
         public DateTime FechaCita { get; set; }
     }
 }

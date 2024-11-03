@@ -9,8 +9,8 @@ namespace BarberiaPerez_API.Models
         [BsonRepresentation(BsonType.ObjectId)]
         public string Id { get; set; }
 
-        [BsonElement("servicio")]
-        public string Servicio { get; set; }
+        [BsonElement("Servicio")]
+        public string? Servicio { get; set; }
 
         [BsonElement("precio")]
         public decimal Precio { get; set; }

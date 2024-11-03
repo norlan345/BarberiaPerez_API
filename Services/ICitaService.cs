@@ -6,7 +6,12 @@ namespace BarberiaPerez_API.Services
 {
     public interface ICitaService
     {
-        Task<AgendarCitaModel> AgendarCita(AgendarCitaModel cita);
-        Task<List<ReporteClienteModel>> ObtenerReportesClientes();
+        Task AgregarCitaAsync(AgendarCitaModel cita); // Método para agendar una nueva cita
+        Task<List<AgendarCitaModel>> ObtenerCitasAsync(); // Método para obtener todas las citas
+        Task<AgendarCitaModel?> ObtenerCitaPorIdAsync(string id); // Método para obtener una cita por ID
+        Task ActualizarCitaAsync(string id, AgendarCitaModel cita); // Método para actualizar una cita
+        Task EliminarCitaAsync(string id); // Método para eliminar una cita por
+                                           // 
+        Task<AgendarCitaModel?> ObtenerCitaPorFechaYHoraAsync(string nombreCliente, DateTime fechaCita);
     }
 }
