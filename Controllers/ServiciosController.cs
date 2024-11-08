@@ -1,11 +1,13 @@
 ﻿using BarberiaPerez_API.Models;
 using BarberiaPerez_API.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace BarberiaPerez_API.Controllers
 {
+    //[Authorize]
     [ApiController]
     [Route("api/[controller]")]
     public class ServiciosController : ControllerBase

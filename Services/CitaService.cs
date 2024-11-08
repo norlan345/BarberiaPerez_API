@@ -82,7 +82,7 @@ namespace BarberiaPerez_API.Services
             try
             {
                 // Elimina una cita por su ID
-                var resultado = await _citas.DeleteOneAsync(cita => cita.Id == id);
+                var resultado = await _citas.DeleteOneAsync(cita => cita.NombreCliente == id);
 
                 if (resultado.DeletedCount == 0)
                 {

@@ -14,5 +14,10 @@ namespace BarberiaPerez_API.Models
 
         [BsonElement("precio")]
         public decimal Precio { get; set; }
+
+        [BsonElement("Total")]
+        public decimal Total { get; set; }
+
+
     }
 }

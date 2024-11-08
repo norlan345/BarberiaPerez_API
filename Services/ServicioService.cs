@@ -21,14 +21,13 @@ namespace BarberiaPerez_API.Services
 
         public async Task AgregarServiciosBarberoAsync(List<ServicioDisponibleModel> servicios)
         {
-            // Implementación para agregar servicios de barberos
-            // Ejemplo simple: iterar y guardar cada servicio (necesita una colección en la base de datos)
             foreach (var servicio in servicios)
             {
                 var nuevoServicio = new ServicioDisponibleModel
                 {
                     Servicio = servicio.Servicio,
-                    Precio = servicio.Precio
+                    Precio = servicio.Precio,
+                    Total = servicio.Total,
                 };
                 await _servicios.InsertOneAsync(nuevoServicio);
             }

@@ -74,7 +74,7 @@ namespace BarberiaPerez_API.Controllers
         }
 
         // DELETE: api/citas/{id}
-        [HttpDelete("{id:length(24)}")]
+        [HttpDelete("{NombreCliente:length(24)}")]
         public async Task<IActionResult> EliminarCita(string id)
         {
             var citaExistente = await _citaService.ObtenerCitaPorIdAsync(id);
@@ -87,6 +87,44 @@ namespace BarberiaPerez_API.Controllers
             await _citaService.EliminarCitaAsync(id);
             return NoContent();
         }
+
+        // PATCH: api/citas/editar/{id}
+        [HttpPatch("editar/{id:length(24)}")]
+        public async Task<IActionResult> EditarCita(string id, [FromBody] AgendarCitaModel citaEditada)
+        {
+            if (citaEditada == null)
+            {
+                return BadRequest("El modelo de cita no puede ser nulo.");
+            }
+
+            // Obtener la cita existente
+            var citaExistente = await _citaService.ObtenerCitaPorIdAsync(id);
+            if (citaExistente == null)
+            {
+                return NotFound("Cita no encontrada");
+            }
+
+            // Actualizar solo los campos que hayan sido proporcionados en citaEditada
+            if (!string.IsNullOrEmpty(citaEditada.Servicio))
+            {
+                citaExistente.Servicio = citaEditada.Servicio;
+            }
+
+            if (citaEditada.FechaCita != default)
+            {
+                citaExistente.FechaCita = citaEditada.FechaCita;
+            }
+
+            if (citaEditada.Total != default)
+            {
+                citaExistente.Total = citaEditada.Total;
+            }
+
+            // Guardar los cambios en la base de datos
+            await _citaService.ActualizarCitaAsync(id, citaExistente);
+            return Ok("Cita editada con éxito");
+        }
+
 
 
 

@@ -17,5 +17,12 @@ namespace BarberiaPerez_API.Models
 
         [BsonElement("FechaCita")]
         public DateTime FechaCita { get; set; }
+
+        [BsonElement("Total")]
+        public decimal Total
+        {
+            get; set;
+
+        }
     }
 }
