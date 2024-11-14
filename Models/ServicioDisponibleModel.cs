@@ -7,16 +7,17 @@ namespace BarberiaPerez_API.Models
     {
         [BsonId]
         [BsonRepresentation(BsonType.ObjectId)]
-        public string Id { get; set; }
+        public string? Id { get; set; }
+
+        [BsonElement("Precio")]
+        public decimal Precio { get; set; }
+
 
         [BsonElement("Servicio")]
         public string? Servicio { get; set; }
 
-        [BsonElement("precio")]
-        public decimal Precio { get; set; }
+       
 
-        [BsonElement("Total")]
-        public decimal Total { get; set; }
 
 
     }

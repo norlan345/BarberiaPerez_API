@@ -1,4 +1,5 @@
 ﻿using BarberiaPerez_API.Models;
+using MongoDB.Bson;
 using MongoDB.Driver;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -16,22 +17,37 @@ namespace BarberiaPerez_API.Services
 
         public async Task<List<ServicioDisponibleModel>> ObtenerServiciosDisponiblesAsync()
         {
-            return await _servicios.Find(s => true).ToListAsync();
+            return await _servicios.FindAsync(new BsonDocument()).Result.ToListAsync();
         }
 
-        public async Task AgregarServiciosBarberoAsync(List<ServicioDisponibleModel> servicios)
+        //public async Task AgregarServiciosBarberoAsync(List<ServicioDisponibleModel> servicios)
+        //
+        //    foreach (var servicio in servicios)
+        //    {
+        //        // MongoDB asignará el Id automáticamente, no es necesario asignarlo aquí
+        //        var nuevoServicio = new ServicioDisponibleModel
+        //        {
+        //            Servicio = servicio.Servicio,
+        //            Precio = servicio.Precio,
+        //            Total = servicio.Total,
+        //        };
+        //        await _servicios.InsertOneAsync(nuevoServicio);
+        //    }
+        //}
+
+        public async Task AgregarServiciosBarberoAsync(ServicioDisponibleModel servicios)
         {
-            foreach (var servicio in servicios)
+            try
             {
-                var nuevoServicio = new ServicioDisponibleModel
-                {
-                    Servicio = servicio.Servicio,
-                    Precio = servicio.Precio,
-                    Total = servicio.Total,
-                };
-                await _servicios.InsertOneAsync(nuevoServicio);
+                await _servicios.InsertOneAsync(servicios); 
+            }
+            catch (Exception ex)
+            {
+                // Aquí podrías registrar el error o manejarlo como desees
+                throw new Exception("Error al agregar cita: " + ex.Message);
             }
         }
+
 
         public async Task<ServicioDisponibleModel> ObtenerServicioPorIdAsync(string id)
         {

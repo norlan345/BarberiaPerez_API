@@ -27,16 +27,50 @@ namespace BarberiaPerez_API.Controllers
             return Ok(servicios);
         }
 
-        // POST: api/servicios/servicios_barbero
-        [HttpPost("servicios_barbero")]
-        public async Task<IActionResult> ServiciosBarbero([FromBody] List<ServicioDisponibleModel> servicios)
-        {
-            if (servicios == null || servicios.Count == 0)
-                return BadRequest("La lista de servicios no puede estar vacía.");
+        //[HttpPost("servicios_barbero")]
+        //public async Task<IActionResult> ServiciosBarbero([FromBody] List<ServicioDisponibleModel> servicios)
+        //{
+        //    if (servicios == null || servicios.Count == 0)
+        //        return BadRequest("La lista de servicios no puede estar vacía.");
 
-            await _servicioService.AgregarServiciosBarberoAsync(servicios);
-            return Ok("Servicios de barbero agregados con éxito");
+        //    // Validar si los campos dentro de cada servicio son válidos
+        //    foreach (var servicio in servicios)
+        //    {
+        //        if (string.IsNullOrEmpty(servicio.Servicio))
+        //            return BadRequest("El campo 'Servicio' es obligatorio.");
+        //        if (servicio.Precio <= 0)
+        //            return BadRequest("El campo 'Precio' debe ser mayor que cero.");
+        //        if (servicio.Total <= 0)
+        //            return BadRequest("El campo 'Total' debe ser mayor que cero.");
+        //    }
+
+        //    await _servicioService.AgregarServiciosBarberoAsync(servicios);
+        //    return Ok("Servicios de barbero agregados con éxito");
+        //}
+
+        //  POST: api/citas/agendar_cita
+        [HttpPost("servicios_barbero")]
+        public async Task<IActionResult> ServiciosBarbero([FromBody] ServicioDisponibleModel servicio)
+        {
+            if (servicio == null)
+                return BadRequest("El servicio es requerido.");
+
+            await _servicioService.AgregarServiciosBarberoAsync(servicio);
+            return Ok("Servicio agregado con éxito.");
         }
+
+
+
+        //// POST: api/servicios/servicios_barbero
+        //[HttpPost("servicios_barbero")]
+        //public async Task<IActionResult> ServiciosBarbero([FromBody] List<ServicioDisponibleModel> servicios)
+        //{
+        //    if (servicios == null || servicios.Count == 0)
+        //        return BadRequest("La lista de servicios no puede estar vacía.");
+
+        //    await _servicioService.AgregarServiciosBarberoAsync(servicios);
+        //    return Ok("Servicios de barbero agregados con éxito");
+        //}
 
         // GET: api/servicios/{id}
         [HttpGet("{id:length(24)}")]
