@@ -31,57 +31,7 @@ namespace BarberiaPerez_API.Controllers
             return Ok("Cita agendada con éxito");
         }
 
-        //[HttpPost]
-        //public async Task<IActionResult> AgendarCita([FromBody] AgendarCitaModel cita)
-        //{
-        //    if (cita == null)
-        //    {
-        //        return BadRequest("La información de la cita es nula.");
-        //    }
-
-
-        //    await _citaService.AgregarCitaAsync(cita);
-
-
-        //    var servicio = new ServicioDisponibleModel
-        //    {
-
-        //        Servicio = cita.Servicio,
-
-        //        Total = cita.Total,
-        //    };
-
-        //    var servicios = new List<ServicioDisponibleModel> { servicio };
-
-        //    await _servicioService.AgregarServiciosBarberoAsync(servicios);
-
-        //    return Ok("Cita y servicio guardados exitosamente.");
-        //}
-
-        //[HttpPost]
-        //public async Task<IActionResult> AgendarCita([FromBody] AgendarCitaModel cita)
-        //{
-        //    if (cita == null)
-        //    {
-        //        return BadRequest("La información de la cita es nula.");
-        //    }
-
-        //    // Guardar la cita
-        //    await _citaService.AgregarCitaAsync(cita);
-
-        //    // Crear la lista de servicios a partir de los servicios seleccionados en la cita
-        //    var servicios = cita.ServiciosSeleccionados.Select(s => new ServicioDisponibleModel
-        //    {
-        //        Servicio = s.Servicio,
-        //        Precio = s.Precio,
-        //        Total = cita.Total // Aquí asumiendo que el total de cada servicio es el mismo que el total de la cita
-        //    }).ToList();
-
-        //    // Guardar los servicios asociados al barbero o a la cita
-        //    await _servicioService.AgregarServiciosBarberoAsync(servicios);
-
-        //    return Ok("Cita y servicios guardados exitosamente.");
-        //}
+       
 
 
 
@@ -128,22 +78,32 @@ namespace BarberiaPerez_API.Controllers
             return NoContent();
         }
 
-        // DELETE: api/citas/{id}
-        [HttpDelete("{NombreCliente:length(24)}")]
+        //[HttpDelete("{id:length(24)}")]
+        //public async Task<IActionResult> EliminarCita(string id)
+        //{
+        //    try
+        //    {
+        //        await _citaService.EliminarCitaAsync(id);
+        //        return NoContent();
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        return StatusCode(500, ex.Message);
+        //    }
+        //}
+
+
+        [HttpDelete("{id:length(24)}")]
         public async Task<IActionResult> EliminarCita(string id)
         {
-            var citaExistente = await _citaService.ObtenerCitaPorIdAsync(id);
+            var servicioExistente = await _citaService.ObtenerCitaPorIdAsync(id);
+            if (servicioExistente == null)
+                return NotFound("Cita no encontrado");
 
-            if (citaExistente == null)
-            {
-                return NotFound("Cita no encontrada");
-            }
-
-            await _citaService.EliminarCitaAsync(id);
+            await _citaService.EliminarCitaAsync (id);
             return NoContent();
         }
 
-     
         [HttpPatch("editar/{id:length(24)}")]
         public async Task<IActionResult> EditarCita(string id, [FromBody] AgendarCitaModel citaEditada)
         {

@@ -81,8 +81,9 @@ namespace BarberiaPerez_API.Services
         {
             try
             {
-                // Elimina una cita por su ID
-                var resultado = await _citas.DeleteOneAsync(cita => cita.NombreCliente == id);
+                // Convierte el id a ObjectId si es necesario
+                var filter = Builders<AgendarCitaModel>.Filter.Eq(c => c.Id, id);
+                var resultado = await _citas.DeleteOneAsync(filter);
 
                 if (resultado.DeletedCount == 0)
                 {
@@ -94,6 +95,7 @@ namespace BarberiaPerez_API.Services
                 throw new Exception("Error al eliminar cita: " + ex.Message);
             }
         }
+
 
 
         public async Task<AgendarCitaModel?> ObtenerCitaPorFechaYHoraAsync(string nombreCliente, DateTime fechaCita)

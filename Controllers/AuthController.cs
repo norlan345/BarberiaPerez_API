@@ -39,20 +39,6 @@ namespace BarberiaPerez_API.Controllers
             return Ok(new { Token = token });
         }
 
-        //[HttpPost("signup")]
-        //public async Task<IActionResult> SignUp([FromBody] UsuarioModel signUp)
-        //{
-        //    // Verificar si el usuario ya existe
-        //    var existingUser = await _usuarioServicio.ObtenerUsuarioAsync(signUp.Nombre);
-        //    if (existingUser != null)
-        //    {
-        //        return Conflict("El usuario ya existe.");
-        //    }
-
-        //    // Crear un nuevo usuario
-        //    await _usuarioServicio.CrearUsuario(signUp);
-        //    return Ok("Usuario registrado exitosamente.");
-        //}
 
         [HttpPost("signup")]
         public async Task<IActionResult> SignUp([FromBody] UsuarioModel user)
@@ -64,53 +50,30 @@ namespace BarberiaPerez_API.Controllers
                 return Conflict("El usuario ya existe.");
             }
 
-            // Crear un nuevo UsuarioModel basado en SignUpModel
+            // Validar el rol
+            var rolesPermitidos = new[] { "Cliente", "Barbero" };
+            if (!rolesPermitidos.Contains(user.Rol))
+            {
+                user.Rol = "Cliente"; // Rol por defecto
+            }
+
+            // Crear un nuevo UsuarioModel
             var nuevoUsuario = new UsuarioModel
             {
                 Nombre = user.Nombre,
                 Contraseña = BCrypt.Net.BCrypt.HashPassword(user.Contraseña), // Encriptar contraseña
-                Rol = "Cliente" // Asignar el rol "Cliente" por defecto
+                Rol = user.Rol
             };
 
-            // Llamar a CrearUsuario con el objeto UsuarioModel
-            await _usuarioServicio
-                .CrearUsuario(nuevoUsuario);
+            // Guardar en la base de datos
+            await _usuarioServicio.CrearUsuario(nuevoUsuario);
 
             return Ok("Usuario registrado exitosamente.");
         }
 
 
-        //[HttpPost("register")]
-        //public async Task<IActionResult> Register([FromBody] SignUpModel Usuario)
-        //{
-        //    var existingUser = await _usuarioServicio.ObtenerUsuarioAsync(Usuario.Nombre);
-        //    if (existingUser != null)
-        //    {
-        //        return Conflict("El usuario ya existe.");
-        //    }
 
-        //    await _usuarioServicio.CrearUsuario(Usuario);
-        //    return Ok("Usuario registrado exitosamente.");
-        //}
-
-        //[HttpPost("signup")]
-        //public async Task<IActionResult> signup([FromBody] SignUpModel user)
-        //{
-        //    var existingUser = await _usuarioServicio.ObtenerUsuarioAsync(user.Nombre);
-        //    if (existingUser != null)
-        //        return Conflict("El usuario ya existe.");
-
-        //    // Encriptamos la contraseña antes de guardarla
-        //    var usuarioModel = new UsuarioModel
-        //    {
-        //        Nombre = user.Nombre,
-        //        Contraseña = BCrypt.Net.BCrypt.HashPassword(user.Contraseña),
-        //        Rol = "Cliente" // Asignar un rol por defecto si es necesario
-        //    };
-
-        //    await _usuarioServicio.CrearUsuarioAsync(usuarioModel);
-        //    return Ok("Usuario registrado exitosamente.");
-        //}
+     
 
 
 
