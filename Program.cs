@@ -42,6 +42,7 @@ builder.Services.AddSingleton<IMongoDatabase>(sp =>
 builder.Services.AddScoped<ICitaService, CitaService>();
 builder.Services.AddScoped<IUsuarioService, UsuarioService>();
 builder.Services.AddSingleton<IServicioService, ServicioService>();
+builder.Services.AddSingleton<ReporteServicio>();
 
 
 // Configuración de controladores y opciones JSON

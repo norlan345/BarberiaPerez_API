@@ -25,25 +25,6 @@ namespace BarberiaPerez_API.Models
 
         }
 
-        // [BsonId]
-        // [BsonRepresentation(BsonType.ObjectId)]
-        // public string? Id { get; set; }
-
-        // [BsonElement("NombreCliente")]
-        // public string? NombreCliente { get; set; }
-
-
-
-        //[BsonElement("Servicio")]
-        // public string? Servicio { get; set; }
-
-        // //[BsonElement("ServiciosSeleccionados")]
-        // //public List<ServicioDisponibleModel> ServiciosSeleccionados { get; set; } = new List<ServicioDisponibleModel>();
-
-        // [BsonElement("FechaCita")]
-        // public DateTime FechaCita { get; set; }
-
-        // [BsonElement("Total")]
-        // public decimal Total { get; set; }
+       
     }
 }

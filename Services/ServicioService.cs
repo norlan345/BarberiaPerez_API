@@ -20,20 +20,7 @@ namespace BarberiaPerez_API.Services
             return await _servicios.FindAsync(new BsonDocument()).Result.ToListAsync();
         }
 
-        //public async Task AgregarServiciosBarberoAsync(List<ServicioDisponibleModel> servicios)
-        //
-        //    foreach (var servicio in servicios)
-        //    {
-        //        // MongoDB asignará el Id automáticamente, no es necesario asignarlo aquí
-        //        var nuevoServicio = new ServicioDisponibleModel
-        //        {
-        //            Servicio = servicio.Servicio,
-        //            Precio = servicio.Precio,
-        //            Total = servicio.Total,
-        //        };
-        //        await _servicios.InsertOneAsync(nuevoServicio);
-        //    }
-        //}
+
 
         public async Task AgregarServiciosBarberoAsync(ServicioDisponibleModel servicios)
         {

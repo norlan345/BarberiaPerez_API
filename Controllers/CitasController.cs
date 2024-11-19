@@ -139,6 +139,19 @@ namespace BarberiaPerez_API.Controllers
             return Ok("Cita editada con éxito");
         }
 
+        [HttpGet("buscarporfecha")]
+        public async Task<IActionResult> BuscarPorFecha([FromQuery] DateTime fechacita)
+        {
+            try
+            {
+                var reportesAnuales = await _citaService.obtenerReporteporfechas(fechacita);
+                return Ok(reportesAnuales);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Error al obtener el reporte por fecha: {ex.Message}");
+            }
+        }
 
 
 

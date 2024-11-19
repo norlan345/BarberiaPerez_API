@@ -103,7 +103,18 @@ namespace BarberiaPerez_API.Services
             return await _citas.Find(c => c.NombreCliente == nombreCliente && c.FechaCita == fechaCita).FirstOrDefaultAsync();
         }
 
+        public async Task<List<AgendarCitaModel>> obtenerReporteporfechas(DateTime fechacita)
+        {
+            var inicioDelDia = fechacita.Date;
+            var finDelDia = fechacita.Date.AddDays(1).AddTicks(-1);
 
+            var filtro = Builders<AgendarCitaModel>.Filter.And(
+                Builders<AgendarCitaModel>.Filter.Gte(c => c.FechaCita, inicioDelDia),
+                Builders<AgendarCitaModel>.Filter.Lte(c => c.FechaCita, finDelDia)
+            );
+
+            return await _citas.Find(filtro).ToListAsync();
+        }
 
 
     }
